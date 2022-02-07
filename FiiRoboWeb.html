@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script type="text/javascript" src="/webiopi.js"></script>
+</head>
+<body bgcolor="#E0E0E0">
+<center>
+<table id="mat" border="0S" bgcolor="#E0E0E0">
+  <tr>
+    <td width="100" height="30">　</td>
+  </tr>
+  <tr>
+    <td width="200" height="200" align="center" style="text-align : center; font-size : 100px;" colspan="3">
+      <span id="score">score: 0</span>
+    </td>
+  <tr>
+    <td width="100" height="30">　</td>
+  </tr>
+  </tr>
+  <tr>
+    <td width="300" height="300" align="center" style="text-align : center; font-size : 200px;" ontouchstart="LeftUp()" bgcolor="red">↑</td>
+    <td width="100" height="300">　</td>
+    <td width="300" height="300" align="center" style="text-align : center; font-size : 200px;" ontouchstart="RightUp()" bgcolor="white">↑</td>
+  </tr>
+  <tr>
+    <td width="300" height="100">　</td>
+    <td width="100" height="100">　</td>
+    <td width="300" height="100">　</td>
+  </tr>
+  <tr>
+    <td width="300" height="300" align="center" style="text-align : center; font-size : 200px;" ontouchstart="LeftDown()" bgcolor="red">↓</td>
+    <td width="100" height="300">　</td>
+    <td width="300" height="300" align="center" style="text-align : center; font-size : 200px;" ontouchstart="RightDown()" bgcolor="white">↓</td>
+  </tr>
+  <tr>
+    <td width="50" height="100">　</td>
+  </tr>
+</table>
+<input type="button" name="btn" style="text-align : center; font-size : 100px;" ontouchstart="game()" value="すたーと"><br>
+</center>
+
+<script type="text/javascript">
+const aka = 0;
+const siro = 1;
+const down = 0;
+const up = 1;
+let stat = [down, down];
+let point = 0;
+
+function RightUp() {
+    webiopi().callMacro( "MoveHand", [2, 120] );
+    stat[siro] = up;
+    return;
+}
+function RightDown() {
+    webiopi().callMacro( "MoveHand", [2, 60] );
+    stat[siro] = down;
+    return;
+}
+function LeftUp() {
+    webiopi().callMacro( "MoveHand", [0, 60] );
+    stat[aka] = up;
+    return;
+}
+function LeftDown() {
+    webiopi().callMacro( "MoveHand", [0, 110] );
+    stat[aka] = down;
+    return;
+}
+
+function game() {
+    let tr = [
+      ['v/00aka_agete.wav', aka, up, 1],
+      ['v/01siro_agenaide.wav', siro, down, 2],
+      ['v/02siro_sageru.wav', siro, down, 3],
+      ['v/03aka_sagete.wav', aka, down, 4],
+      ['v/04siro_sagenaide.wav', siro, up, 5],
+      ['v/05aka_agenai.wav', aka, down, 6],
+      ['v/06siro_sagete.wav', siro, down, 7],
+      ['v/07siro_sageru.wav', siro, down, 8],
+      ['v/08aka_agete.wav', aka, up, 9],
+      ['v/09aka_sagenaide.wav', aka, up, 10],
+      ['v/10siro_agenai.wav', siro, down, 11],
+      ['v/11siro_agete.wav', siro, up, 12],
+      ['v/12aka_agenaide.wav', aka, down, 13],
+      ['v/13siro_sageru.wav', siro, down, 14],
+      ['v/14siro_sagete.wav', siro, down, 15],
+      ['v/15siro_sagenai.wav', siro, up, 16],
+      ['v/16aka_agete.wav', aka, up, 17],
+      ['v/17siro_agenaide.wav', siro, down, 18],
+      ['v/18aka_sagenai.wav', aka, up, 19],
+      ['v/19siro_sagete.wav', siro, down, 20],
+      ['v/20siro_ageru.wav', siro, up, 21],
+      ['v/21aka_sagete.wav', aka, down, 22],
+      ['v/22siro_sagenaide.wav', siro, up, 23],
+      ['v/23aka_agenai.wav', aka, down, 24],
+      ['v/24aka_agete.wav', aka, up, 25],
+      ['v/25siro_agenaide.wav', siro, down, 26],
+      ['v/26aka_sageru.wav', aka, down, 27]
+    ];
+    let pinpon = new Audio('s/pinpon.wav');
+    let buu = new Audio('s/buu.wav');
+    let trial = new Array(30);
+    let i;
+    nextplay = 0;
+    point = 0;
+    document.getElementById("score").innerHTML = "score: " + point.toString();
+    for(i=0; i<27; i++) {
+        trial[i] = new Audio(tr[i][0]);
+    }
+    trial[0].addEventListener("ended", function(){
+        if(stat[tr[0][1]] == tr[0][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[1].play();
+    }, false);
+    trial[1].addEventListener("ended", function(){
+        if(stat[tr[1][1]] == tr[1][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[2].play();
+    }, false);
+    trial[2].addEventListener("ended", function(){
+        if(stat[tr[2][1]] == tr[2][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[3].play();
+    }, false);
+    trial[3].addEventListener("ended", function(){
+        if(stat[tr[3][1]] == tr[3][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[4].play();
+    }, false);
+    trial[4].addEventListener("ended", function(){
+        if(stat[tr[4][1]] == tr[4][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[5].play();
+    }, false);
+    trial[5].addEventListener("ended", function(){
+        if(stat[tr[5][1]] == tr[5][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[6].play();
+    }, false);
+    trial[6].addEventListener("ended", function(){
+        if(stat[tr[6][1]] == tr[6][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[7].play();
+    }, false);
+    trial[7].addEventListener("ended", function(){
+        if(stat[tr[7][1]] == tr[7][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[8].play();
+    }, false);
+    trial[8].addEventListener("ended", function(){
+        if(stat[tr[8][1]] == tr[8][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[9].play();
+    }, false);
+    trial[9].addEventListener("ended", function(){
+        if(stat[tr[9][1]] == tr[9][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[10].play();
+    }, false);
+    trial[10].addEventListener("ended", function(){
+        if(stat[tr[10][1]] == tr[10][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[11].play();
+    }, false);
+    trial[11].addEventListener("ended", function(){
+        if(stat[tr[11][1]] == tr[11][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[12].play();
+    }, false);
+    trial[12].addEventListener("ended", function(){
+        if(stat[tr[12][1]] == tr[12][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[13].play();
+    }, false);
+    trial[13].addEventListener("ended", function(){
+        if(stat[tr[13][1]] == tr[13][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[14].play();
+    }, false);
+    trial[14].addEventListener("ended", function(){
+        if(stat[tr[14][1]] == tr[14][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[15].play();
+    }, false);
+    trial[15].addEventListener("ended", function(){
+        if(stat[tr[15][1]] == tr[15][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[16].play();
+    }, false);
+    trial[16].addEventListener("ended", function(){
+        if(stat[tr[16][1]] == tr[16][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[17].play();
+    }, false);
+    trial[17].addEventListener("ended", function(){
+        if(stat[tr[17][1]] == tr[17][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[18].play();
+    }, false);
+    trial[18].addEventListener("ended", function(){
+        if(stat[tr[18][1]] == tr[18][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[19].play();
+    }, false);
+    trial[19].addEventListener("ended", function(){
+        if(stat[tr[19][1]] == tr[19][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[20].play();
+    }, false);
+    trial[20].addEventListener("ended", function(){
+        if(stat[tr[20][1]] == tr[20][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[21].play();
+    }, false);
+    trial[21].addEventListener("ended", function(){
+        if(stat[tr[21][1]] == tr[21][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[22].play();
+    }, false);
+    trial[22].addEventListener("ended", function(){
+        if(stat[tr[22][1]] == tr[22][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[23].play();
+    }, false);
+    trial[23].addEventListener("ended", function(){
+        if(stat[tr[23][1]] == tr[23][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[24].play();
+    }, false);
+    trial[24].addEventListener("ended", function(){
+        if(stat[tr[24][1]] == tr[24][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[25].play();
+    }, false);
+    trial[25].addEventListener("ended", function(){
+        if(stat[tr[25][1]] == tr[25][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+        trial[26].play();
+    }, false);
+    trial[26].addEventListener("ended", function(){
+        if(stat[tr[26][1]] == tr[26][2]) {
+            point = point + 10;
+            document.getElementById("score").innerHTML = "score: " + point.toString();
+            pinpon.play();
+        } else {
+            buu.play();
+        }
+    }, false);
+    RightDown();
+    LeftDown();
+    trial[0].play();
+    return;
+}
+</script>
+</body>
+</html>
